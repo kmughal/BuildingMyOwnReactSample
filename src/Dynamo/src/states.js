@@ -1,14 +1,14 @@
-import {setNextUnitOfWorkFromCurrentWip} from "./workLoop";
+import {
+  setNextUnitOfWorkFromCurrentWip,
+  runHookForCurrentWip
+} from "./workLoop";
 
-let _state = "not defined";
 const useState = intialValue => {
-  if (_state === "not defined") _state = intialValue;
-
+  const state = runHookForCurrentWip(intialValue);
   const _setState = action => {
-    _state = action(_state);
-    setNextUnitOfWorkFromCurrentWip();
+    setNextUnitOfWorkFromCurrentWip(action, state);
   };
-  return [_state, _setState];
+  return [state, _setState];
 };
 
 export { useState };

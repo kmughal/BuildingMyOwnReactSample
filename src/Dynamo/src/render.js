@@ -7,7 +7,8 @@ const render = (element, container) => {
     props: {
       children: [element]
     },
-    alternate: null
+    alternate: null,
+    hooks : null
   };
 
   wipRoot.alternate = wipRoot;

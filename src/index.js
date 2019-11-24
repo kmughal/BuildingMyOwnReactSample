@@ -37,8 +37,6 @@ const element = () => {
 };
 
 
-
-
 const timeElement = (props) => {
  // const [dateTimeValue, setDateTime] = Dynamo.useState(new Date().toString());
   // setInterval(() => {

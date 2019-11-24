@@ -36,15 +36,30 @@ const startWorkLoop = rootObject => {
   requestIdleCallback(workLoop);
 };
 
-const setNextUnitOfWorkFromCurrentWip = () => {
+const setNextUnitOfWorkFromCurrentWip = (action, state) => {
   nextUnitOfWork = {
     dom: currentRoot.dom,
     props: currentRoot.props,
     alternate: currentRoot,
-    isFunctionalComponent: true
+    isFunctionalComponent: true,
+    hook: { action, state }
   };
   wipRoot = nextUnitOfWork;
   console.log(wipRoot);
 };
 
-export { startWorkLoop, setNextUnitOfWorkFromCurrentWip };
+const runHookForCurrentWip = intialState => {
+  if (nextUnitOfWork.hook && nextUnitOfWork.hook.action) {
+    const newState = nextUnitOfWork.hook.action(
+      nextUnitOfWork.hook.state || intialState
+    );
+    nextUnitOfWork.hook = {
+      action: nextUnitOfWork.hook.action,
+      state: newState
+    };
+    return nextUnitOfWork.hook.state;
+  }
+  return intialState;
+};
+
+export { startWorkLoop, setNextUnitOfWorkFromCurrentWip, runHookForCurrentWip };
