@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.js": "/static/js/main.f9ca1488.chunk.js",
-    "main.js.map": "/static/js/main.f9ca1488.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.c3cf73c4.js",
-    "runtime-main.js.map": "/static/js/runtime-main.c3cf73c4.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.26e3d9cb751b2e161b1ed79cddba25d0.js": "/precache-manifest.26e3d9cb751b2e161b1ed79cddba25d0.js",
-    "service-worker.js": "/service-worker.js"
+    "main.js": "/BuildingMyOwnReactSample/static/js/main.f9ca1488.chunk.js",
+    "main.js.map": "/BuildingMyOwnReactSample/static/js/main.f9ca1488.chunk.js.map",
+    "runtime-main.js": "/BuildingMyOwnReactSample/static/js/runtime-main.ba8ad383.js",
+    "runtime-main.js.map": "/BuildingMyOwnReactSample/static/js/runtime-main.ba8ad383.js.map",
+    "index.html": "/BuildingMyOwnReactSample/index.html",
+    "precache-manifest.a761aec5cff934956f8c16860bb79e06.js": "/BuildingMyOwnReactSample/precache-manifest.a761aec5cff934956f8c16860bb79e06.js",
+    "service-worker.js": "/BuildingMyOwnReactSample/service-worker.js"
   },
   "entrypoints": [
-    "static/js/runtime-main.c3cf73c4.js",
+    "static/js/runtime-main.ba8ad383.js",
     "static/js/main.f9ca1488.chunk.js"
   ]
 }
