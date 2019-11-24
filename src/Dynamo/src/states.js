@@ -1,4 +1,4 @@
-import {setNextUnitOfWorkFromCurrntWip} from "./workLoop";
+import {setNextUnitOfWorkFromCurrentWip} from "./workLoop";
 
 let _state = "not defined";
 const useState = intialValue => {
@@ -6,7 +6,7 @@ const useState = intialValue => {
 
   const _setState = action => {
     _state = action(_state);
-    setNextUnitOfWorkFromCurrntWip();
+    setNextUnitOfWorkFromCurrentWip();
   };
   return [_state, _setState];
 };

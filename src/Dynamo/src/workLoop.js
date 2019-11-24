@@ -36,7 +36,7 @@ const startWorkLoop = rootObject => {
   requestIdleCallback(workLoop);
 };
 
-const setNextUnitOfWorkFromCurrntWip = () => {
+const setNextUnitOfWorkFromCurrentWip = () => {
   nextUnitOfWork = {
     dom: currentRoot.dom,
     props: currentRoot.props,
@@ -47,4 +47,4 @@ const setNextUnitOfWorkFromCurrntWip = () => {
   console.log(wipRoot);
 };
 
-export { startWorkLoop, setNextUnitOfWorkFromCurrntWip };
+export { startWorkLoop, setNextUnitOfWorkFromCurrentWip };
