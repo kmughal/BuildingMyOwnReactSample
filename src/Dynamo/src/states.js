@@ -1,14 +1,8 @@
-import {
-  setNextUnitOfWorkFromCurrentWip,
-  runHookForCurrentWip
-} from "./workLoop";
+import { getHookForCurrentItem } from "./workLoop";
 
-const useState = intialValue => {
-  const state = runHookForCurrentWip(intialValue);
-  const _setState = action => {
-    setNextUnitOfWorkFromCurrentWip(action, state);
-  };
-  return [state, _setState];
+const useState = (intialValue) => {
+  const hook = getHookForCurrentItem(intialValue);
+  return [hook.state, hook.callback];
 };
 
 export { useState };

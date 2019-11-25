@@ -8,7 +8,8 @@ const render = (element, container) => {
       children: [element]
     },
     alternate: null,
-    hooks : null
+    hooks: null,
+    componentName: element.name
   };
 
   wipRoot.alternate = wipRoot;
