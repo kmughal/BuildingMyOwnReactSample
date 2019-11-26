@@ -5,7 +5,11 @@ const applyProperties = (fiber, dom) => {
   Object.keys(props)
     .filter(utils.isProperty)
     .forEach(name => {
-      dom[name] = props[name];
+      if (name === "className")
+        String(props[name])
+          .split(" ")
+          .forEach(c => dom.classList.add(c));
+      else dom[name] = props[name];
     });
 };
 

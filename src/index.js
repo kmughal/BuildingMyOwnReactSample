@@ -20,7 +20,7 @@ const element = () => {
   };
 
   return (
-    <section>
+    <div>
       <h1>Application 1</h1>
       <h1 style={style}>Simple Counter Example:</h1>
       <p>
@@ -29,7 +29,7 @@ const element = () => {
       </p>
       <input style={textBoxStyle} type="text" value={counter} />
       <button onClick={handleClick}>Counter</button>
-    </section>
+    </div>
   );
 };
 
@@ -50,7 +50,7 @@ const timeElement = props => {
 
   return (
     <div>
-      <h1>Digital Clock {dateTimeValue}</h1>
+      <h1 className="a b c">Digital Clock {dateTimeValue}</h1>
       <button
         onClick={() => {
           setCounter(c => c + 1);
