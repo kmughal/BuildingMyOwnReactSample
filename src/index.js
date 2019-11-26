@@ -40,6 +40,7 @@ const timeElement = props => {
   }, 1000);
 
   const [counter, setCounter] = Dynamo.useState(0);
+  const [square, setSquare] = Dynamo.useState(2);
 
   const style = {
     border: "4px solid red",
@@ -49,8 +50,23 @@ const timeElement = props => {
 
   return (
     <div>
-      <h1>Digital Clock</h1>
-      <div style={style}>Current Time:{dateTimeValue}</div>
+      <h1>Digital Clock {dateTimeValue}</h1>
+      <button
+        onClick={() => {
+          setCounter(c => c + 1);
+        }}
+      >
+        Click
+      </button>
+      Counter:{counter}
+      <button
+        onClick={() => {
+          setSquare(c => c * 2);
+        }}
+      >
+        Click
+      </button>
+      Square:{square}
     </div>
   );
 };

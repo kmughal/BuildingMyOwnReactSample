@@ -3,13 +3,14 @@ import { performUnitOfWork, commitRoot } from "./reconciler";
 let currentRoot = null;
 let wipRoot = null;
 let nextUnitOfWork = null;
-let elements = [];
-let addElement = wipRoot => {
-  //elements.push({ [wipRoot.componentName]: createElement(wipRoot) });
+const elements = [];
+
+const addElement = wipRoot => {
   elements.push(createElement(wipRoot));
   return elements;
 };
-let createElement = wipRoot => {
+
+const createElement = wipRoot => {
   return {
     alternate: wipRoot,
     currentRoot: wipRoot,
@@ -25,10 +26,7 @@ const _workIsCompleted = work => {
 
 let elementIndex = 0;
 const getNextUnitOfWork = () => {
-  if (elementIndex < elements.length) {
-    return elements[elementIndex++];
-  }
-  return null;
+  return elementIndex < elements.length ? elements[elementIndex++] : null;
 };
 
 const setNextUnitOfWorkAndWipRoot = () => {
@@ -66,33 +64,75 @@ const startWorkLoop = rootObject => {
 
 const selectWipByComponentName = (elements, componentName) => {
   const filterByName = e => e.currentRoot.componentName === componentName;
-  return elements.filter(filterByName);
+  var result = elements.filter(filterByName);
+  return result.length > 0 ? result[0] : null;
+};
+
+const propertyPresent = (nameOfProperty, object) => {
+  return nameOfProperty in object;
+};
+
+const didHookRan = hook => {
+  return propertyPresent("ran", hook);
+};
+
+const resetHookRanFlagIfPresent = hooks => {
+  hooks.filter(didHookRan).forEach(hook => {
+    delete hook.ran;
+  });
+};
+
+const createHookIfNotPresent = (nextUnitOfWork, initialValue) => {
+  if (nextUnitOfWork.hooks[nextUnitOfWork.currentHookIndex])
+    return nextUnitOfWork.hooks[nextUnitOfWork.currentHookIndex];
+
+  var result = createNewHook(initialValue);
+  nextUnitOfWork.hooks.push(result);
+  return result;
+
+  function createNewHook(initialValue) {
+    var newHookReturned = {};
+    newHookReturned.state = initialValue;
+
+    newHookReturned.callback = action => {
+      if (didHookRan(newHookReturned)) return;
+
+      const newState = action(newHookReturned.state);
+      if (newHookReturned.state === newState) {
+        return;
+      }
+      newHookReturned.state = newState;
+      setNextUnitOfWorkFromCurrentWip(nextUnitOfWork);
+      newHookReturned.ran = true;
+    };
+    return newHookReturned;
+  }
+};
+
+const getHook = (nextUnitOfWork, initialValue) => {
+  nextUnitOfWork.hooks = nextUnitOfWork.hooks || [];
+
+  if (!propertyPresent("currentHookIndex", nextUnitOfWork)) {
+    nextUnitOfWork.currentHookIndex = -1;
+  }
+
+  nextUnitOfWork.currentHookIndex++;
+  const hook = createHookIfNotPresent(nextUnitOfWork, initialValue);
+  return hook;
 };
 
 const getHookForCurrentItem = initialValue => {
-  const search = selectWipByComponentName(elements, wipRoot.componentName);
+  const result = selectWipByComponentName(elements, wipRoot.componentName);
+  if (!result) throw new Error("Failed to find the component!");
+  const newHook = getHook(result.nextUnitOfWork, initialValue);
+  resetHookRanFlagIfPresent(result.nextUnitOfWork.hooks);
+  return newHook;
+};
 
-  if (search.length > 0) {
-    var result = search[0];
-    result.nextUnitOfWork.hook = result.nextUnitOfWork.hook || {};
-    result.nextUnitOfWork.hook.state =
-      result.nextUnitOfWork.hook.state || initialValue;
-
-    let hack = false; // this needs to be fixed.
-    result.nextUnitOfWork.hook.callback = action => {
-      if (!hack) {
-        result.nextUnitOfWork.hook.state = action(
-          result.nextUnitOfWork.hook.state
-        );
-        setNextUnitOfWorkFromCurrentWip(result.nextUnitOfWork);
-      }
-      hack = true;
-    };
-
-    return result.nextUnitOfWork.hook;
-  }
-
-  return [0, () => {}];
+const resetcurrentHookIndex = () => {
+  elements.forEach(element => {
+    element.nextUnitOfWork.currentHookIndex = -1;
+  });
 };
 
 const setNextUnitOfWorkFromCurrentWip = currentRoot => {
@@ -102,9 +142,11 @@ const setNextUnitOfWorkFromCurrentWip = currentRoot => {
     alternate: currentRoot,
     isFunctionalComponent: true,
     hook: currentRoot.hook,
+    hooks: currentRoot.hooks,
     componentName: currentRoot.componentName
   };
   wipRoot = nextUnitOfWork;
+  resetcurrentHookIndex();
 };
 
 export {

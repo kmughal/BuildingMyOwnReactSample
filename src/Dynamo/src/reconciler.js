@@ -61,6 +61,7 @@ const updateHostComponent = fiber => {
 const updateFunctionalComponent = fiber => {
   wipFiber = fiber;
   const functionalComponent = fiber.props.children[0]();
+  fiber.currentHookIndex = -1;
   reconcileChildren(fiber, functionalComponent.props.children);
 };
 
