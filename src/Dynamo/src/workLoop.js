@@ -152,10 +152,8 @@ const computeMemo = (memo, action, params) => {
   const previousParamsInString = JSON.stringify(memo.previousParams);
   const newParamsInString = JSON.stringify(params);
 
-  if (previousParamsInString === newParamsInString)
-    return;
+  if (previousParamsInString === newParamsInString) return;
 
-  console.log("running memo");
   memo.previousActionResult = action(params);
   memo.previousParams = params;
 };
@@ -175,6 +173,7 @@ const getMemoValue = (action, params, componentName) => {
 const resetcurrentHookIndex = () => {
   elements.forEach(element => {
     element.nextUnitOfWork.currentHookIndex = -1;
+    element.nextUnitOfWork.currentMemoIndex = -1;
   });
 };
 

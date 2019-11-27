@@ -32,7 +32,7 @@ const element = () => {
     </div>
   );
 };
-
+var c = 1;
 const timeElement = props => {
   const [dateTimeValue, setDateTime] = Dynamo.useState(new Date().toString());
   setInterval(() => {
@@ -47,9 +47,10 @@ const timeElement = props => {
     padding: "10px 10px",
     "margin-top": "10px"
   };
+  c++;
   const r = Dynamo.useMemo(() => {
     return 1+1;
-  },[]);
+  },[c%2==0]);
 
   return (
     <div>

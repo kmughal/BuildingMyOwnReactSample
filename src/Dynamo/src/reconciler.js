@@ -61,8 +61,13 @@ const updateHostComponent = fiber => {
 const updateFunctionalComponent = fiber => {
   wipFiber = fiber;
   const functionalComponent = fiber.props.children[0]();
-  fiber.currentHookIndex = -1;
+  resetHooks(fiber);
   reconcileChildren(fiber, functionalComponent.props.children);
+};
+
+const resetHooks = fiber => {
+  fiber.currentHookIndex = -1;
+  fiber.currentMemoIndex = -1;
 };
 
 const performUnitOfWork = fiber => {
