@@ -47,9 +47,13 @@ const timeElement = props => {
     padding: "10px 10px",
     "margin-top": "10px"
   };
+  const r = Dynamo.useMemo(() => {
+    return 1+1;
+  },[]);
 
   return (
     <div>
+      <p>Memo:{r}</p>
       <h1 className="a b c">Digital Clock {dateTimeValue}</h1>
       <button
         onClick={() => {

@@ -19,7 +19,7 @@ const createElement = wipRoot => {
   };
 };
 
-const _workIsCompleted = work => {
+const workIsComplete = work => {
   currentRoot = work;
   wipRoot = null;
 };
@@ -49,7 +49,7 @@ const workLoop = deadline => {
     shouldYield = deadline.timeRemaining() < 1;
   }
   if (!nextUnitOfWork && wipRoot) {
-    _workIsCompleted(commitRoot(wipRoot));
+    workIsComplete(commitRoot(wipRoot));
   }
   requestIdleCallback(workLoop);
 };
@@ -129,6 +129,49 @@ const getHookForCurrentItem = initialValue => {
   return newHook;
 };
 
+const getMemo = (nextUnitOfWork, action, params) => {
+  nextUnitOfWork.memos = nextUnitOfWork.memos || [];
+  if (!propertyPresent("currentMemoIndex", nextUnitOfWork)) {
+    nextUnitOfWork.currentMemoIndex = -1;
+  }
+  nextUnitOfWork.currentMemoIndex++;
+  let memo = nextUnitOfWork.memos[nextUnitOfWork.currentMemoIndex];
+  if (!memo) {
+    memo = {
+      action,
+      params,
+      previousActionResult: null,
+      previousParams: null
+    };
+    nextUnitOfWork.memos.push(memo);
+  }
+  return memo;
+};
+
+const computeMemo = (memo, action, params) => {
+  const previousParamsInString = JSON.stringify(memo.previousParams);
+  const newParamsInString = JSON.stringify(params);
+
+  if (previousParamsInString === newParamsInString)
+    return;
+
+  console.log("running memo");
+  memo.previousActionResult = action(params);
+  memo.previousParams = params;
+};
+
+const getMemoValue = (action, params, componentName) => {
+  const component = selectWipByComponentName(elements, wipRoot.componentName);
+  if (!component) throw new Error("Fail to select ", componentName);
+
+  if (!params || params.length === 0) {
+    return action();
+  }
+  const memo = getMemo(component.nextUnitOfWork, action, params);
+  computeMemo(memo, action, params);
+  return memo.previousActionResult;
+};
+
 const resetcurrentHookIndex = () => {
   elements.forEach(element => {
     element.nextUnitOfWork.currentHookIndex = -1;
@@ -152,5 +195,6 @@ const setNextUnitOfWorkFromCurrentWip = currentRoot => {
 export {
   startWorkLoop,
   setNextUnitOfWorkFromCurrentWip,
-  getHookForCurrentItem
+  getHookForCurrentItem,
+  getMemoValue
 };

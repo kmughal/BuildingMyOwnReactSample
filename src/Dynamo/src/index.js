@@ -1,5 +1,5 @@
 import render from "./render";
 import createElement from "./createElement";
-import {useState} from "./states"
+import { useState, useMemo } from "./states";
 
-export { render, createElement,useState };
+export { render, createElement, useState, useMemo };
