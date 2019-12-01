@@ -58,7 +58,7 @@ const startWorkLoop = rootObject => {
   wipRoot = rootObject;
   nextUnitOfWork = wipRoot;
   addElement(rootObject);
-  console.log(elements);
+  // console.log(elements);
   requestIdleCallback(workLoop);
 };
 
@@ -72,10 +72,9 @@ const propertyPresent = (nameOfProperty, object) => {
   return nameOfProperty in object;
 };
 
-
 const initialzePropertyIfNotPresent = (nameOfProperty, object) => {
-  if (!propertyPresent(nameOfProperty,object)) object[nameOfProperty] = -1;
-}
+  if (!propertyPresent(nameOfProperty, object)) object[nameOfProperty] = -1;
+};
 
 const didHookRan = hook => {
   return propertyPresent("ran", hook);
@@ -134,7 +133,7 @@ const getHookForCurrentItem = initialValue => {
 
 const getMemo = (nextUnitOfWork, action, params) => {
   nextUnitOfWork.memos = nextUnitOfWork.memos || [];
-  initialzePropertyIfNotPresent("currentMemoIndex", nextUnitOfWork)
+  initialzePropertyIfNotPresent("currentMemoIndex", nextUnitOfWork);
   nextUnitOfWork.currentMemoIndex++;
   let memo = nextUnitOfWork.memos[nextUnitOfWork.currentMemoIndex];
   if (!memo) {
@@ -179,11 +178,18 @@ const resetcurrentHookIndex = () => {
   });
 };
 
-const getVirtualDomReference = (initialValue) => {
-  const currentElement = selectWipByComponentName(elements, wipRoot.componentName);
-  initialzePropertyIfNotPresent("currentReferenceIndex",currentElement.nextUnitOfWork);
-  currentElement.nextUnitOfWork.currentReferenceIndex++;
-  return {} || initialValue;
+const getVirtualDomReference = initialValue => {
+  const currentElement = selectWipByComponentName(
+    elements,
+    wipRoot.componentName
+  );
+  // initialzePropertyIfNotPresent("currentReferenceIndex",currentElement.nextUnitOfWork);
+  // currentElement.nextUnitOfWork.currentReferenceIndex++;
+  currentElement.nextUnitOfWork.ref = {
+    current: initialValue || currentElement.ref
+  };
+
+  return currentElement.nextUnitOfWork.ref;
 };
 
 const setNextUnitOfWorkFromCurrentWip = currentRoot => {

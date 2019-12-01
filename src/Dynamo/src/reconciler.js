@@ -93,7 +93,7 @@ const performUnitOfWork = fiber => {
 const commitRoot = wipRoot => {
   deletions.forEach(commitWork);
   commitWork(wipRoot.child);
-  console.log("work to be commited for:", wipRoot.child);
+  //console.log("work to be commited for:", wipRoot.child);
   return wipRoot;
 };
 

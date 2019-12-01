@@ -15,9 +15,18 @@ const element = () => {
     padding: "5px 5px",
     color: "red"
   };
-  const handleClick = event => {
+  const textbox = Dynamo.useRef(null);
+
+  const handleClick = e => {
     setCounter(c => c + 1);
-  };
+    e.preventDefault();
+    return false;
+  }
+
+  const alertTextBoxValue = _ => {
+   console.log(textbox.current.value,"value");
+    return false;
+  }
 
   return (
     <div>
@@ -27,8 +36,10 @@ const element = () => {
         This is a simple example. Using hooks!
         <span>This is a test</span>
       </p>
-      <input style={textBoxStyle} type="text" value={counter} />
+      <input ref={textbox} style={textBoxStyle} type="text" value={counter} />
       <button onClick={handleClick}>Counter</button>
+      <button onClick={alertTextBoxValue}>An example of useRef</button>
+      
     </div>
   );
 };
@@ -49,8 +60,8 @@ const timeElement = props => {
   };
   c++;
   const r = Dynamo.useMemo(() => {
-    return 1+1;
-  },[c%2==0]);
+    return 1 + 1;
+  }, [c % 2 == 0]);
 
   return (
     <div>

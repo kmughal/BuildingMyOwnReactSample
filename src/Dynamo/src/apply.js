@@ -14,6 +14,10 @@ const updateProperty = (dom, props) => {
           dom["style"][name] = inlineStyleProps[name];
         });
         break;
+      case "ref":
+        props.ref.current = dom;
+        break;
+
       default:
         dom[name] = props[name];
     }
