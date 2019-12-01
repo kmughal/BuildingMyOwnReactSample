@@ -1,4 +1,8 @@
-import { getHookForCurrentItem, getMemoValue } from "./workLoop";
+import {
+  getHookForCurrentItem,
+  getMemoValue,
+  getVirtualDomReference
+} from "./workLoop";
 
 const useState = intialValue => {
   const hook = getHookForCurrentItem(intialValue);
@@ -10,4 +14,9 @@ const useMemo = (action, params) => {
   return memoValue;
 };
 
-export { useState, useMemo };
+const useRef = initialValue => {
+  const ref = getVirtualDomReference(initialValue);
+  return ref;
+};
+
+export { useState, useMemo, useRef };

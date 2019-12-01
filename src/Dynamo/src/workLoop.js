@@ -72,6 +72,11 @@ const propertyPresent = (nameOfProperty, object) => {
   return nameOfProperty in object;
 };
 
+
+const initialzePropertyIfNotPresent = (nameOfProperty, object) => {
+  if (!propertyPresent(nameOfProperty,object)) object[nameOfProperty] = -1;
+}
+
 const didHookRan = hook => {
   return propertyPresent("ran", hook);
 };
@@ -112,9 +117,7 @@ const createHookIfNotPresent = (nextUnitOfWork, initialValue) => {
 const getHook = (nextUnitOfWork, initialValue) => {
   nextUnitOfWork.hooks = nextUnitOfWork.hooks || [];
 
-  if (!propertyPresent("currentHookIndex", nextUnitOfWork)) {
-    nextUnitOfWork.currentHookIndex = -1;
-  }
+  initialzePropertyIfNotPresent("currentHookIndex", nextUnitOfWork);
 
   nextUnitOfWork.currentHookIndex++;
   const hook = createHookIfNotPresent(nextUnitOfWork, initialValue);
@@ -131,9 +134,7 @@ const getHookForCurrentItem = initialValue => {
 
 const getMemo = (nextUnitOfWork, action, params) => {
   nextUnitOfWork.memos = nextUnitOfWork.memos || [];
-  if (!propertyPresent("currentMemoIndex", nextUnitOfWork)) {
-    nextUnitOfWork.currentMemoIndex = -1;
-  }
+  initialzePropertyIfNotPresent("currentMemoIndex", nextUnitOfWork)
   nextUnitOfWork.currentMemoIndex++;
   let memo = nextUnitOfWork.memos[nextUnitOfWork.currentMemoIndex];
   if (!memo) {
@@ -174,7 +175,15 @@ const resetcurrentHookIndex = () => {
   elements.forEach(element => {
     element.nextUnitOfWork.currentHookIndex = -1;
     element.nextUnitOfWork.currentMemoIndex = -1;
+    element.nextUnitOfWork.currentReferenceIndex = -1;
   });
+};
+
+const getVirtualDomReference = (initialValue) => {
+  const currentElement = selectWipByComponentName(elements, wipRoot.componentName);
+  initialzePropertyIfNotPresent("currentReferenceIndex",currentElement.nextUnitOfWork);
+  currentElement.nextUnitOfWork.currentReferenceIndex++;
+  return {} || initialValue;
 };
 
 const setNextUnitOfWorkFromCurrentWip = currentRoot => {
@@ -195,5 +204,6 @@ export {
   startWorkLoop,
   setNextUnitOfWorkFromCurrentWip,
   getHookForCurrentItem,
-  getMemoValue
+  getMemoValue,
+  getVirtualDomReference
 };
