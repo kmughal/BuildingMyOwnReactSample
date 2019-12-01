@@ -7,13 +7,11 @@ export const utils = {
   },
   isProperty(key) {
     return (
-      key !== "children" && !utils.isEvent(key) && !utils.isInLineStyle(key)
+      key !== "children" && !utils.isEvent(key)
     );
   },
   isRemoved(next) {
     return key => !(key in next);
   },
-  isInLineStyle(key) {
-    return key === "style";
-  }
+  
 };

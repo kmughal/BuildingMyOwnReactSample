@@ -1,16 +1,32 @@
 import { utils } from "./utils";
 
-const applyProperties = (fiber, dom) => {
-  const { props } = fiber;
-  Object.keys(props)
-    .filter(utils.isProperty)
-    .forEach(name => {
-      if (name === "className")
+const updateProperty = (dom, props) => {
+  return name => {
+    switch (name) {
+      case "className":
         String(props[name])
           .split(" ")
           .forEach(c => dom.classList.add(c));
-      else dom[name] = props[name];
-    });
+        break;
+      case "style":
+        const inlineStyleProps = props.style;
+        Object.keys(inlineStyleProps).forEach(name => {
+          dom["style"][name] = inlineStyleProps[name];
+        });
+        break;
+      default:
+        dom[name] = props[name];
+    }
+  };
+};
+
+const applyProperties = (fiber, dom) => {
+  const { props } = fiber;
+  if (!props) return;
+
+  Object.keys(props)
+    .filter(utils.isProperty)
+    .forEach(updateProperty(dom, props));
 };
 
 const applyEvents = (fiber, dom) => {
@@ -21,17 +37,6 @@ const applyEvents = (fiber, dom) => {
       let eventName = name.replace("on", "").toLowerCase();
       dom.addEventListener(eventName, props[name]);
     });
-};
-
-const applyInlineStyle = (fiber, dom) => {
-  const { props } = fiber;
-  if (!props) return;
-  const inlineStyleProps = props.style;
-  if (inlineStyleProps) {
-    Object.keys(inlineStyleProps).forEach(name => {
-      dom["style"][name] = inlineStyleProps[name];
-    });
-  }
 };
 
 const removeOldEvents = (dom, prevProps, nextProps) => {
@@ -55,17 +60,15 @@ const removeOldProperties = (dom, prevProps, nextProps) => {
     });
 };
 
-const applyNewEvents = (dom, prevProps, nextProps) => {
+const applyNewProperties = (dom, prevProps, nextProps) => {
   const { isProperty, isNew } = utils;
   Object.keys(nextProps)
     .filter(isProperty)
     .filter(isNew(prevProps, nextProps))
-    .forEach(name => {
-      dom[name] = nextProps[name];
-    });
+    .forEach(updateProperty(dom, nextProps));
 };
 
-const applyNewProperties = (dom, prevProps, nextProps) => {
+const applyNewEvents = (dom, prevProps, nextProps) => {
   const { isEvent, isNew } = utils;
   Object.keys(nextProps)
     .filter(isEvent)
@@ -84,7 +87,6 @@ const createDom = fiber => {
 
   applyProperties(fiber, dom);
   applyEvents(fiber, dom);
-  applyInlineStyle(fiber, dom);
   return dom;
 };
 
@@ -93,13 +95,11 @@ const updateDom = (dom, prevProps, nextProps) => {
   removeOldProperties(dom, prevProps, nextProps);
   applyNewEvents(dom, prevProps, nextProps);
   applyNewProperties(dom, prevProps, nextProps);
-  applyInlineStyle(dom, nextProps);
 };
 
 export {
   applyProperties,
   applyEvents,
-  applyInlineStyle,
   removeOldEvents,
   removeOldProperties,
   applyNewEvents,
