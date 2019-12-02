@@ -66,7 +66,6 @@ const timeElement = props => {
       <h1 className="a b c">Digital Clock {dateTimeValue}</h1>
       <button
         onClick={() => {
-          console.log("add is called");
           setCounter(c => c + 1);
         }}
       >
@@ -75,7 +74,6 @@ const timeElement = props => {
       Counter:{counter}
       <button
         onClick={() => {
-          console.log("square is called");
           setSquare(c => c * 2);
         }}
       >

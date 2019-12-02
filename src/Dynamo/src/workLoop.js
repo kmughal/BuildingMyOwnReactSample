@@ -58,7 +58,6 @@ const startWorkLoop = rootObject => {
   wipRoot = rootObject;
   nextUnitOfWork = wipRoot;
   addElement(rootObject);
-  // console.log(elements);
   requestIdleCallback(workLoop);
 };
 
