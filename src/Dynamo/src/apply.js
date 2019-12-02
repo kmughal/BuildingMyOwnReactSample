@@ -44,12 +44,21 @@ const applyEvents = (fiber, dom) => {
 };
 
 const removeOldEvents = (dom, prevProps, nextProps) => {
-  const { isEvent, isNew } = utils;
+  const { isEventDifferent } = utils;
   Object.keys(prevProps)
-    .filter(isEvent)
-    .filter(key => !(key in nextProps) || isNew(prevProps, nextProps)(key))
+    .filter(isEventDifferent(prevProps, nextProps))
     .forEach(name => {
       const eventType = name.toLowerCase().substring(2);
+      console.log(
+        "--remove --- nextProps:",
+        nextProps,
+        "prevProps:",
+        prevProps,
+        "dom:",
+        dom,
+        "eventType:",
+        eventType
+      );
       dom.removeEventListener(eventType, prevProps[name]);
     });
 };
@@ -73,12 +82,12 @@ const applyNewProperties = (dom, prevProps, nextProps) => {
 };
 
 const applyNewEvents = (dom, prevProps, nextProps) => {
-  const { isEvent, isNew } = utils;
+  const { isEventPresentInNewProps } = utils;
   Object.keys(nextProps)
-    .filter(isEvent)
-    .filter(isNew(prevProps, nextProps))
+    .filter(isEventPresentInNewProps)
     .forEach(name => {
       const eventType = name.toLowerCase().substring(2);
+      console.log("registering:", eventType);
       dom.addEventListener(eventType, nextProps[name]);
     });
 };

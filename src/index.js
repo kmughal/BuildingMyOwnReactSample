@@ -19,14 +19,12 @@ const element = () => {
 
   const handleClick = e => {
     setCounter(c => c + 1);
-    e.preventDefault();
-    return false;
-  }
+  };
 
   const alertTextBoxValue = _ => {
-   console.log(textbox.current.value,"value");
+    console.log(textbox.current.value, "value");
     return false;
-  }
+  };
 
   return (
     <div>
@@ -39,7 +37,6 @@ const element = () => {
       <input ref={textbox} style={textBoxStyle} type="text" value={counter} />
       <button onClick={handleClick}>Counter</button>
       <button onClick={alertTextBoxValue}>An example of useRef</button>
-      
     </div>
   );
 };
@@ -69,6 +66,7 @@ const timeElement = props => {
       <h1 className="a b c">Digital Clock {dateTimeValue}</h1>
       <button
         onClick={() => {
+          console.log("add is called");
           setCounter(c => c + 1);
         }}
       >
@@ -77,6 +75,7 @@ const timeElement = props => {
       Counter:{counter}
       <button
         onClick={() => {
+          console.log("square is called");
           setSquare(c => c * 2);
         }}
       >
